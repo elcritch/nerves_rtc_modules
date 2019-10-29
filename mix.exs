@@ -6,7 +6,7 @@ defmodule NervesRtcModules.MixProject do
 
   def project do
     [
-      app: :nerves_time,
+      app: :nerves_rtc_modules,
       version: @version,
       elixir: "~> 1.7",
       description: description(),
@@ -25,7 +25,7 @@ defmodule NervesRtcModules.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      # mod: {NervesTime.Application, []}
+      mod: {NervesTime.Application, []}
     ]
   end
 
