@@ -1,6 +1,6 @@
 defmodule NervesRtcModules.RTC.Ds3231 do
   @behaviour NervesTime.HardwareTimeModule
-  import NervesRtcModules.I2CUtils
+  alias NervesRtcModules.I2CUtils
   alias Circuits.I2C
 
   require Logger
@@ -16,7 +16,7 @@ defmodule NervesRtcModules.RTC.Ds3231 do
 
     {:ok, bus} = I2C.open(@i2c_bus)
 
-    dt = case NervesRtcModules.RTC.Utils.i2c_read(bus, @i2c_address, @i2c_read_cmd) do
+    dt = case I2CUtils.i2c_read(bus, @i2c_address, @i2c_read_cmd) do
       {:ok, dt} -> dt
       _err -> :error
     end
@@ -31,7 +31,7 @@ defmodule NervesRtcModules.RTC.Ds3231 do
     {:ok, bus} = I2C.open(@i2c_bus)
 
     now = NaiveDateTime.utc_now()
-    result = NervesRtcModules.RTC.Utils.i2c_write(bus, @i2c_address, @i2c_write_cmd, now)
+    result = I2CUtils.i2c_write(bus, @i2c_address, @i2c_write_cmd, now)
 
     I2C.close(bus)
 

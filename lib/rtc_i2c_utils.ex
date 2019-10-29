@@ -3,7 +3,7 @@ defmodule NervesRtcModules.I2CUtils do
   alias Circuits.I2C
   import NervesRtcModules, only: [to_dec: 1, to_bcd: 1]
 
-  def i2c_write(i2c, address, write_cmd, %NaiveDateTime{}time) do
+  def i2c_write(i2c_pid, address, write_cmd, time) do
     day_of_week = Calendar.ISO.day_of_week(time.year, time.month, time.day)
 
     payload = <<
@@ -17,7 +17,7 @@ defmodule NervesRtcModules.I2CUtils do
       to_bcd(time.year - 2000)
     >>
 
-    I2C.write(i2c, 81, write_cmd <> payload)
+    I2C.write(i2c_pid, address, write_cmd <> payload)
   end
 
   def i2c_read(i2c_pid, address, {read_cmd, read_bytes}) do
