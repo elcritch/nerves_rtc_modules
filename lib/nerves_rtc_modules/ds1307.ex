@@ -35,6 +35,7 @@ defmodule NervesRtcModules.RTC.Ds1307 do
             _::size(3), month::integer-size(5),
             year::integer-size(8)>> = time_bytes do
 
+      Logger.info("Retrieving time from RTC DS1307 ")
       %NaiveDateTime{
         calendar: Calendar.ISO,
         day: to_dec(day_of_month),
