@@ -24,7 +24,7 @@ defmodule NervesRtcModules.MixProject do
 
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger]
       # mod: {NervesTime.Application, []}
     ]
   end
