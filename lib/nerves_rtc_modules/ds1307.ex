@@ -53,21 +53,15 @@ defmodule NervesRtcModules.RTC.Ds1307 do
     time = NaiveDateTime.utc_now()
     day_of_week = Calendar.ISO.day_of_week(time.year, time.month, time.day)
 
-    with {:ok, bus} <- I2C.open(@i2c_bus) do
-      with payload <-
-             <<@dt_reg, to_bcd(time.second), to_bcd(time.minute), to_bcd(time.hour),
-               to_bcd(day_of_week), to_bcd(time.day), to_bcd(time.month),
-               to_bcd(time.year - 2000)>>,
-           :ok <- I2C.write(bus, @i2c_address, payload),
-           :ok <- I2C.close(bus) do
-        :ok
-      else
-        _err ->
-          I2C.close(bus)
-          :error
-      end
+    with payload <-
+            <<@dt_reg, to_bcd(time.second), to_bcd(time.minute), to_bcd(time.hour),
+              to_bcd(day_of_week), to_bcd(time.day), to_bcd(time.month),
+              to_bcd(time.year - 2000)>>,
+          :ok <- I2CUtils.write_register(@i2c_buss, @i2c_addres, @dt_reg, payload)
+      :ok
     else
       _err ->
+        I2C.close(bus)
         :error
     end
   end
