@@ -1,6 +1,6 @@
 defmodule NervesRtcModules.RTC.Ds3231 do
   @behaviour NervesTime.HardwareTimeModule
-
+  import NervesRtcModules.I2CUtils
   alias Circuits.I2C
 
   require Logger

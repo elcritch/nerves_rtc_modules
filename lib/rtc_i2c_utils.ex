@@ -1,5 +1,6 @@
-defmodule NervesRtcModules.RTC.Utils do
+defmodule NervesRtcModules.I2CUtils do
   require Logger
+  alias Circuits.I2C
 
   def do_write(i2c, write_cmd, time) do
     day_of_week = Calendar.ISO.day_of_week(time.year, time.month, time.day)
@@ -15,11 +16,11 @@ defmodule NervesRtcModules.RTC.Utils do
       to_bcd(time.year - 2000)
     >>
 
-    Circuits.I2C.write(i2c, 81, write_cmd <> payload)
+    I2C.write(i2c, 81, write_cmd <> payload)
   end
 
   def i2c_read(i2c_pid, address, {read_cmd, read_bytes}) do
-    case Circuits.I2C.write_read(i2c_pid, address, read_cmd, read_bytes) do
+    case I2C.write_read(i2c_pid, address, read_cmd, read_bytes) do
      {:ok, time_bytes} -> Circuits.I2C.write_read(i2c_pid, address, read_cmd, read_bytes)
 
         << _::size(1), second::integer-size(7),
@@ -43,12 +44,4 @@ defmodule NervesRtcModules.RTC.Utils do
       err
   end
 
-  def to_dec(bcd) do
-    <<digit_1::integer-size(4), digit_2::integer-size(4)>> = <<bcd::integer-size(8)>>
-    digit_1 * 10 + digit_2
-  end
-
-  def to_bcd(number) do
-    div(number, 10) * 16 + rem(number, 10)
-  end
 end
