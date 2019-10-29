@@ -1,4 +1,4 @@
-defmodule NervesRtcModules.RTC.Ds3231 do
+defmodule NervesRtcModules.RTC.Ds1307 do
   @moduledoc """
   Warning: Untested!
   TODO: Test and Fixme
