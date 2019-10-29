@@ -1,28 +1,72 @@
 defmodule NervesRtcModules.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
+  @source_url "https://github.com/elcritch/nerves_rtc_modules"
+
   def project do
     [
-      app: :nerves_rtc_modules,
-      version: "0.1.0",
-      elixir: "~> 1.9",
+      app: :nerves_time,
+      version: @version,
+      elixir: "~> 1.7",
+      description: description(),
+      package: package(),
+      source_url: @source_url,
+      docs: docs(),
       start_permanent: Mix.env() == :prod,
+      build_embedded: true,
+      dialyzer: [
+        flags: [:unmatched_returns, :error_handling, :race_conditions, :underspecs]
+      ],
       deps: deps()
     ]
   end
 
-  # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger],
+      mod: {NervesTime.Application, []}
     ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
+  defp description do
+    "RTC modules for usage with Nerves Time. "
+  end
+
+  defp package do
+    %{
+      files: [
+        "lib",
+        "src/*.[ch]",
+        "test",
+        "mix.exs",
+        "README.md",
+        "LICENSE",
+        "CHANGELOG.md",
+        "Makefile"
+      ],
+      licenses: ["Apache-2.0"],
+      links: %{"GitHub" => @source_url}
+    }
+  end
+
   defp deps do
     [
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+      {:nerves_time, git: "https://github.com/elcritch/nerves_time.git", branch: "master"},
+      {:circuits_gpio, "~> 0.4.2"},
+      {:circuits_i2c, "~> 0.3.4"},
+      {:circuits_spi, "~> 0.1.3"},
+      {:ex_doc, "~> 0.19", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev, :test], runtime: false}
+    ]
+  end
+
+  defp docs do
+    [
+      extras: ["README.md"],
+      main: "readme",
+      source_ref: "v#{@version}",
+      source_url: @source_url
     ]
   end
 end
