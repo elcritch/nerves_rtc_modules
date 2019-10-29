@@ -5,23 +5,35 @@ defmodule NervesRtcModules.RTC.Ds3231 do
 
   require Logger
 
-  @i2c_bus Application.get_env(:nerves_rtc_modules, :i2c_bus, nil)
-  @i2c_address Application.get_env(:nerves_rtc_modules, :i2c_address, nil)
+  @i2c_bus Application.get_env(:nerves_rtc_modules, :i2c_bus, "i2c-1")
+  @i2c_address Application.get_env(:nerves_rtc_modules, :i2c_address, 81)
 
-  defmodule State do
-    @enforce_keys [:i2c_device, :i2c_address]
-    defstruct [:i2c_device, :i2c_address, :device_pid]
-  end
-
-  @impl true
-  def update_time() do
-  end
+  @i2c_read_cmd {<<0x02>>, 7}
 
   @impl true
   def retrieve_time() do
 
-    {:ok, i2c_bus} = I2C.open(@i2c_bus)
+    {:ok, bus} = I2C.open(@i2c_bus)
 
+    dt = case NervesRtcModules.RTC.Utils.i2c_read(bus, @i2c_address, @i2c_read_cmd) do
+      {:ok, dt} -> dt
+      _err -> :error
+    end
+
+    I2C.close(i2c_bus)
+
+    dt
+  end
+
+  @impl true
+  def update_time() do
+    {:ok, bus} = I2C.open(@i2c_bus)
+
+    result = NervesRtcModules.RTC.Utils.i2c_read(bus, @i2c_address, @i2c_read_cmd)
+
+    I2C.close(i2c_bus)
+
+    result
   end
 
 end
