@@ -57,8 +57,7 @@ defmodule NervesRtcModules.RTC.Ds1307 do
     # day_of_week = Calendar.ISO.day_of_week(time.year, time.month, time.day)
 
     with payload <-
-            <<@dt_reg,
-              to_bcd(time.second),
+            <<to_bcd(time.second),
               to_bcd(time.minute),
               to_bcd(time.hour),
               to_bcd(0),
