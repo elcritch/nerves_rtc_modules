@@ -19,7 +19,7 @@ defmodule NervesRtcModules.I2CUtils do
 
   def write_register(bus, device, register, data) do
     with {:ok, bus} <- I2C.open(bus) do
-      with :ok <- I2C.write(bus, device, [<<register>>, data] ),
+      with :ok <- I2C.write(bus, device, <<register>> <> data ),
            :ok <- I2C.close(bus) do
         :ok
       else
