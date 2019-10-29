@@ -25,7 +25,7 @@ defmodule NervesRtcModules.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {NervesTime.Application, []}
+      # mod: {NervesTime.Application, []}
     ]
   end
 
@@ -52,7 +52,7 @@ defmodule NervesRtcModules.MixProject do
 
   defp deps do
     [
-      {:nerves_time, github: "elcritch/nerves_time", branch: "master"},
+      {:nerves_time, "~> 0.4.0", github: "elcritch/nerves_time", branch: "master"},
       {:circuits_gpio, "~> 0.4.2"},
       {:circuits_i2c, "~> 0.3.4"},
       {:circuits_spi, "~> 0.1.3"},
