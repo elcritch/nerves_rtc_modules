@@ -1,7 +1,7 @@
 defmodule NervesRtcModules.RTC.Ds1307 do
   @moduledoc """
-  Warning: Untested!
-  TODO: Test and Fixme
+  RTC Module for DS1307 chip with NVRAM and Control register functions.
+  Tested with hardware on Oct 28, 2019.
   """
   @behaviour NervesTime.HardwareTimeModule
   alias NervesRtcModules.I2CUtils
@@ -73,10 +73,22 @@ defmodule NervesRtcModules.RTC.Ds1307 do
     end
   end
 
-  def retrieve_control() do
-    with {:ok, bytes} <- I2CUtils.read_register(@i2c_bus, @i2c_address, @ctrl_reg, @ctrl_count)
+  def update_control(%{out: out, sqwe: sqwe, rs1: rs1, rs0: rs0}) do
+    with payload <- << out::size(1), 0x0::size(2), sqwe::size(1), 0::size(2), rs1::size(1), rs0::size(1) >>,
+        :ok <- I2CUtils.write_register(@i2c_bus, @i2c_address, @ctrl_reg, payload)
     do
-      bytes
+      :ok
+    else
+      _err ->
+        :error
+    end
+  end
+
+  def retrieve_control() do
+    with {:ok, bytes} <- I2CUtils.read_register(@i2c_bus, @i2c_address, @ctrl_reg, @ctrl_count),
+         << out::size(1), 0x0::size(2), sqwe::size(1), 0::size(2), rs1::size(1), rs0::size(1) >> <- bytes
+    do
+      %{out: out, sqwe: sqwe, rs1: rs1, rs0: rs0}
     else
       _err ->
         :error
@@ -87,6 +99,16 @@ defmodule NervesRtcModules.RTC.Ds1307 do
     with {:ok, bytes} <- I2CUtils.read_register(@i2c_bus, @i2c_address, @nvram_reg, @nvram_count)
     do
       bytes
+    else
+      _err ->
+        :error
+    end
+  end
+
+  def update_nvram(bytes) do
+    with :ok <- I2CUtils.write_register(@i2c_bus, @i2c_address, @ctrl_reg, bytes)
+    do
+      :ok
     else
       _err ->
         :error
