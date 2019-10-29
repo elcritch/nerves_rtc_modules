@@ -57,17 +57,18 @@ defmodule NervesRtcModules.RTC.Ds1307 do
             <<@dt_reg, to_bcd(time.second), to_bcd(time.minute), to_bcd(time.hour),
               to_bcd(day_of_week), to_bcd(time.day), to_bcd(time.month),
               to_bcd(time.year - 2000)>>,
-          :ok <- I2CUtils.write_register(@i2c_buss, @i2c_addres, @dt_reg, payload)
+          :ok <- I2CUtils.write_register(@i2c_bus, @i2c_address, @dt_reg, payload)
+    do
       :ok
     else
       _err ->
-        I2C.close(bus)
         :error
     end
   end
 
   def retrieve_control() do
-    with {:ok, bytes} <- I2CUtils.read_register(@i2c_bus, @i2c_address, @ctrl_reg, @ctrl_count) do
+    with {:ok, bytes} <- I2CUtils.read_register(@i2c_bus, @i2c_address, @ctrl_reg, @ctrl_count)
+    do
       bytes
     else
       _err ->
@@ -76,7 +77,8 @@ defmodule NervesRtcModules.RTC.Ds1307 do
   end
 
   def retrieve_nvram() do
-    with {:ok, bytes} <- I2CUtils.read_register(@i2c_bus, @i2c_address, @nvram_reg, @nvram_count) do
+    with {:ok, bytes} <- I2CUtils.read_register(@i2c_bus, @i2c_address, @nvram_reg, @nvram_count)
+    do
       bytes
     else
       _err ->
