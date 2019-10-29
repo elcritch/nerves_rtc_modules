@@ -1,8 +1,9 @@
 defmodule NervesRtcModules.I2CUtils do
   require Logger
   alias Circuits.I2C
+  import NervesRtcModules, only: [to_dec: 1, to_bcd: 1]
 
-  def do_write(i2c, write_cmd, time) do
+  def i2c_write(i2c, address, write_cmd, %NaiveDateTime{}time) do
     day_of_week = Calendar.ISO.day_of_week(time.year, time.month, time.day)
 
     payload = <<
@@ -40,8 +41,9 @@ defmodule NervesRtcModules.I2CUtils do
           second: to_dec(second),
           year: to_dec(year) + 2000
         }
-    {:error, _err_msg} = err ->
-      err
+      {:error, _err_msg} = err ->
+        err
+    end
   end
 
 end

@@ -9,6 +9,7 @@ defmodule NervesRtcModules.RTC.Ds3231 do
   @i2c_address Application.get_env(:nerves_rtc_modules, :i2c_address, 81)
 
   @i2c_read_cmd {<<0x02>>, 7}
+  @i2c_write_cmd <<>>
 
   @impl true
   def retrieve_time() do
@@ -20,7 +21,7 @@ defmodule NervesRtcModules.RTC.Ds3231 do
       _err -> :error
     end
 
-    I2C.close(i2c_bus)
+    I2C.close(bus)
 
     dt
   end
@@ -29,9 +30,10 @@ defmodule NervesRtcModules.RTC.Ds3231 do
   def update_time() do
     {:ok, bus} = I2C.open(@i2c_bus)
 
-    result = NervesRtcModules.RTC.Utils.i2c_read(bus, @i2c_address, @i2c_read_cmd)
+    now = NaiveDateTime.utc_now()
+    result = NervesRtcModules.RTC.Utils.i2c_write(bus, @i2c_address, @i2c_write_cmd, now)
 
-    I2C.close(i2c_bus)
+    I2C.close(bus)
 
     result
   end
