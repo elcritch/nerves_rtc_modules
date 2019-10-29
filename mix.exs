@@ -52,7 +52,7 @@ defmodule NervesRtcModules.MixProject do
 
   defp deps do
     [
-      {:nerves_time, git: "https://github.com/elcritch/nerves_time.git", branch: "master"},
+      {:nerves_time, github: "elcritch/nerves_time", branch: "master"},
       {:circuits_gpio, "~> 0.4.2"},
       {:circuits_i2c, "~> 0.3.4"},
       {:circuits_spi, "~> 0.1.3"},

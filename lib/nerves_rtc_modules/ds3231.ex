@@ -17,8 +17,12 @@ defmodule NervesRtcModules.RTC.Ds3231 do
     {:ok, bus} = I2C.open(@i2c_bus)
 
     dt = case I2CUtils.i2c_read(bus, @i2c_address, @i2c_read_cmd) do
-      {:ok, dt} -> dt
-      _err -> :error
+      {:error, err_msg} ->
+        Logger.warn("Error reading I2C RTC module: #{inspect err_msg}")
+
+        :error
+      dt ->
+        dt
     end
 
     I2C.close(bus)
@@ -27,6 +31,7 @@ defmodule NervesRtcModules.RTC.Ds3231 do
   end
 
   @impl true
+  @spec update_time() :: :ok | :error
   def update_time() do
     {:ok, bus} = I2C.open(@i2c_bus)
 
