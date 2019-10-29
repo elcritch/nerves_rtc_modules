@@ -12,13 +12,13 @@ defmodule NervesRtcModules.RTC.Ds1307 do
   @i2c_bus Application.get_env(:nerves_rtc_modules, :i2c_bus, "i2c-1")
   @i2c_address Application.get_env(:nerves_rtc_modules, :i2c_address, 0x68)
 
-  @dt_reg 0x00
+  @dt_reg 0x0
   @dt_count 7
 
-  @ctrl_reg 0x07
+  @ctrl_reg 0x7
   @ctrl_count 1
 
-  @nvram_reg 0x08
+  @nvram_reg 0x8
   @nvram_count 56
 
   @impl true
